@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using HackDayApi.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

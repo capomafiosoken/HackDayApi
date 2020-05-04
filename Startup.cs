@@ -1,5 +1,6 @@
 using System.Text;
 using HackDayApi.Context;
+using HackDayApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

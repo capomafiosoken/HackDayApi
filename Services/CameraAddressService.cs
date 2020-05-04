@@ -8,7 +8,7 @@ using HackDayApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace HackDayApi
+namespace HackDayApi.Services
 {
     public class CameraAddressService
     {
@@ -21,7 +21,6 @@ namespace HackDayApi
         
         public async Task SaveCameras(IFormFile file)
         {
-            var result = new List<House>();
             var a = file.OpenReadStream();
             var reader = ExcelReaderFactory.CreateReader(a).AsDataSet();
             foreach (DataTable dataTable in reader.Tables)

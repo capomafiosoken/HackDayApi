@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HackDayApi.Context
 {
-    public abstract class CameraAddressContext: DbContext
+    public class CameraAddressContext: DbContext
     {
-        protected CameraAddressContext(DbContextOptions<CameraAddressContext> options) : base(options)
+        public CameraAddressContext(DbContextOptions<CameraAddressContext> options) : base(options)
         {
             
         }
