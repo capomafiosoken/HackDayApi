@@ -1,6 +1,8 @@
 using System.Text;
+using HackDayApi.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,6 +22,8 @@ namespace HackDayApi
         public void ConfigureServices(IServiceCollection services)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            services.AddDbContext<CameraAddressContext>(builder =>
+                builder.UseNpgsql(Configuration.GetConnectionString("HackDayDatabase")));
             services.AddControllers();
         }
 

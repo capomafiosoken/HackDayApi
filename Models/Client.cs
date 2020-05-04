@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HackDayApi.Models
 {
+    [Table("client")]
     public class Client
     {
         [Key] [Column("id")] public long Id { get; set; }
