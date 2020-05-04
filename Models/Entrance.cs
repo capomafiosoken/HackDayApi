@@ -12,7 +12,6 @@ namespace HackDayApi.Models
         [Column("number")] public int Number { get; set; }
         [Column("latitude")] public double Latitude { get; set; }
         [Column("longitude")] public double Longitude { get; set; }
-
         [Column("camera_number")] public int CameraNumber { get; set; }
         public List<Client> Clients { get; set; }
 

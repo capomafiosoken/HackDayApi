@@ -50,11 +50,15 @@ namespace HackDayApi.Controllers
                             var response = await Geocoder.GeocodeAddress(dataRow[0].ToString());
                             House.Latitude = response.Data.Items[0].Coordinates[0];
                             House.Longitude = response.Data.Items[0].Coordinates[1];
-                            var Entrance = new Models.Entrance();
-                            Entrance.Number = int.Parse(dataRow[1].ToString());
-                            Entrance.CameraNumber = int.Parse(dataRow[2].ToString());
-                            Entrance.Latitude = response.Data.Items[0].Entrances[Entrance.Number].Coordinates[0];
-                            Entrance.Longitude = response.Data.Items[0].Entrances[Entrance.Number].Coordinates[1];
+                            var EntrancesList = new List<Models.Entrance>();
+                            for (int i = 0 ; i < response.Data.Items[0].Entrances.Length;i++)
+                            {
+                                var Entrance  = new Models.Entrance();
+                                Entrance.Number = i;
+                                Entrance.Latitude = Entrance.Latitude;
+                                Entrance.Longitude = Entrance.Longitude;
+                                EntrancesList.Add(Entrance);
+                            }
 
                         }
                     }
