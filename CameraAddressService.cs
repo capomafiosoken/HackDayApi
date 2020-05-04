@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ExcelDataReader;
@@ -61,6 +60,7 @@ namespace HackDayApi
             }
             return null;
         }
+
         public async Task<List<House>> SaveClients(IFormFile file)
         {
             var a = file.OpenReadStream();
@@ -71,7 +71,7 @@ namespace HackDayApi
                 {
                     string address = dataRow[1].ToString();
                     var house = await _context.Houses.FirstOrDefaultAsync(x => x.Address == address);
-                    if (house!=null)
+                    if (house != null)
                     {
                         house = new House
                         {
@@ -90,12 +90,15 @@ namespace HackDayApi
                                 Longitude = response.Data.Items[0].Entrances[i].Coordinates[1]
                             });
                         }
+
                         await _context.Houses.AddAsync(house);
                         await _context.Entrances.AddRangeAsync(entrancesList);
                         await _context.SaveChangesAsync();
                     }
-                    var client = await _context.Entrances.FirstOrDefaultAsync(x=>x.Id == house.Id && x.Number == int.Parse(dataRow[1].ToString()));
-                    enter.CameraNumber = int.Parse(dataRow[2].ToString());
+
+                    var client = await _context.Entrances.FirstOrDefaultAsync(x =>
+                        x.Id == house.Id && x.Number == int.Parse(dataRow[1].ToString()));
+                   
                     await _context.SaveChangesAsync();
                     var Client = new Client();
                     Client.FullName = dataRow[0].ToString();
@@ -108,6 +111,13 @@ namespace HackDayApi
             }
 
             return null;
+        }
+
+        public async Task<House> GetHouseInfo(long id)
+        {
+            var a = await _context.Houses.Where(x => x.Id == id).Include(x=>x.Entrances).ThenInclude(x=>x.Clients).FirstOrDefaultAsync();
+            return a;
+
         }
     }
 }
