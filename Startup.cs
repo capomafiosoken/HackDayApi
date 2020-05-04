@@ -24,6 +24,7 @@ namespace HackDayApi
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             services.AddDbContext<CameraAddressContext>(builder =>
                 builder.UseNpgsql(Configuration.GetConnectionString("HackDayDatabase")));
+            services.AddScoped<CameraAddressService>();
             services.AddControllers();
         }
 
