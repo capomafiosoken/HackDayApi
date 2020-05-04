@@ -45,16 +45,16 @@ namespace HackDayApi.Controllers
                     {
                         foreach (DataRow dataRow in dataTable.Rows)
                         {
-                            var House = new House();
-                            House.Address = dataRow[0].ToString();
+                            var house = new House();
+                            house.Address = dataRow[0].ToString();
                             var response = await Geocoder.GeocodeAddress(dataRow[0].ToString());
-                            House.Latitude = response.Data.Items[0].Coordinates[0];
-                            House.Longitude = response.Data.Items[0].Coordinates[1];
-                            var Entrance = new Models.Entrance();
-                            Entrance.Number = int.Parse(dataRow[1].ToString());
-                            Entrance.CameraNumber = int.Parse(dataRow[2].ToString());
-                            Entrance.Latitude = response.Data.Items[0].Entrances[Entrance.Number].Coordinates[0];
-                            Entrance.Longitude = response.Data.Items[0].Entrances[Entrance.Number].Coordinates[1];
+                            house.Latitude = response.Data.Items[0].Coordinates[0];
+                            house.Longitude = response.Data.Items[0].Coordinates[1];
+                            var entrance = new Models.Entrance();
+                            entrance.Number = int.Parse(dataRow[1].ToString());
+                            entrance.CameraNumber = int.Parse(dataRow[2].ToString());
+                            entrance.Latitude = response.Data.Items[0].Entrances[entrance.Number].Coordinates[0];
+                            entrance.Longitude = response.Data.Items[0].Entrances[entrance.Number].Coordinates[1];
 
                         }
                     }
