@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using ExcelDataReader;
+using HackDayApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 
 namespace HackDayApi.Controllers
 {
@@ -43,7 +45,17 @@ namespace HackDayApi.Controllers
                     {
                         foreach (DataRow dataRow in dataTable.Rows)
                         {
-                            Console.WriteLine(dataRow[0]);
+                            var House = new House();
+                            House.Address = dataRow[0].ToString();
+                            var response = await Geocoder.GeocodeAddress(dataRow[0].ToString());
+                            House.Latitude = response.Data.Items[0].Coordinates[0];
+                            House.Longitude = response.Data.Items[0].Coordinates[1];
+                            var Entrance = new Models.Entrance();
+                            Entrance.Number = int.Parse(dataRow[1].ToString());
+                            Entrance.cameraNumber = int.Parse(dataRow[2].ToString());
+                            Entrance.Latitude = response.Data.Items[0].Entrances[Entrance.Number].Coordinates[0];
+                            Entrance.Longitude = response.Data.Items[0].Entrances[Entrance.Number].Coordinates[1];
+
                         }
                     }
                 }
@@ -66,6 +78,11 @@ namespace HackDayApi.Controllers
                     {
                         foreach (DataRow dataRow in dataTable.Rows)
                         {
+                            var Client = new Client();
+                            Client.FullName = dataRow[0].ToString();
+                            Client.ApartmentNumber = int.Parse(dataRow[3].ToString());
+                            Client.PhoneNumber = dataRow[4].ToString();
+                            Client.TariffPlan = dataRow[5].ToString();
                             Console.WriteLine(dataRow[0]);
                         }
                     }
