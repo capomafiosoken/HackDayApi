@@ -24,11 +24,11 @@ namespace HackDayApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetGeocode()
         {
-            var a = await Geocoder.GeocodeAddress("12 микрорайон 15а дом");
+            var a = await Geocoder.GeocodeAddress("12-й микрорайон, 11, подъезд 6");
             return Ok(a);
         }
 
-        [HttpPost("/camera")]
+        [HttpPost("/cameras")]
         public async Task<IActionResult> UploadCameraAddress(List<IFormFile> files)
         {
             foreach (var file in files)
@@ -51,7 +51,7 @@ namespace HackDayApi.Controllers
             return Ok(files.Count);
         }
         
-        [HttpPost("/client")]
+        [HttpPost("/clients")]
         public async Task<IActionResult> PostFile(List<IFormFile> files)
         {
             foreach (var file in files)
