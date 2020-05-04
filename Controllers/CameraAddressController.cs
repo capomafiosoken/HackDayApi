@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ExcelDataReader;
-using HackDayApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,10 +21,10 @@ namespace HackDayApi.Controllers
             _service = service;
         }
         
-        [HttpGet]
-        public async Task<IActionResult> GetGeocode()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetGeocode(long id)
         {
-            var a = await Geocoder.GeocodeAddress("12-й микрорайон, 11, подъезд 6");
+            var a = await _service.GetHouseInfo(id);
             return Ok(a);
         }
 

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ExcelDataReader;
@@ -60,6 +59,12 @@ namespace HackDayApi
                 }
             }
             return null;
+        }
+
+        public async Task<House> GetHouseInfo(long id)
+        {
+            var a = await _context.Houses.Where(x => x.Id == id).Include(x=>x.Entrances).ThenInclude(x=>x.Clients).FirstOrDefaultAsync();
+            return a;
         }
     }
 }
