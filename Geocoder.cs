@@ -18,7 +18,7 @@ namespace HackDayApi
             while (true)
             {
                 using var request = new HttpRequestMessage(new HttpMethod("GET"),
-                    $"https://yandex.kz/maps/api/search?csrfToken={_csrfToken}&lang=ru_KZ&origin=maps-form&text={address}");
+                    $"https://yandex.kz/maps/api/search?add_type=direct&csrfToken={_csrfToken}&lang=ru_KZ&origin=maps-form&text={address}&yandex_gid=162&z=19");
                 request.Headers.TryAddWithoutValidation("Cookie",
                     "yandexuid=9741003971588572215; i=PZRX3TjCXAkIvvHChltibCbEKLnVppAcu%2Bpu2yMoI%2BujlWXz6FAVl4N6aR1JXomg5fq2BWId%2BPlVX%2FCru%2FR9Q5gfa5s%3D");
                 var response = await httpClient.SendAsync(request);
