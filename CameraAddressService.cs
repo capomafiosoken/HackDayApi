@@ -19,8 +19,9 @@ namespace HackDayApi
             _context = context;
         }
         
-        public async Task<List<House>> SaveCameras(IFormFile file)
+        public async Task SaveCameras(IFormFile file)
         {
+            var result = new List<House>();
             var a = file.OpenReadStream();
             var reader = ExcelReaderFactory.CreateReader(a).AsDataSet();
             foreach (DataTable dataTable in reader.Tables)
@@ -52,16 +53,15 @@ namespace HackDayApi
                         await _context.Entrances.AddRangeAsync(entrancesList);
                         await _context.SaveChangesAsync();
                     }
-
+                    
                     var enter = await _context.Entrances.FirstOrDefaultAsync(x=>x.HouseId == house.Id && x.Number == int.Parse(dataRow[1].ToString()));
                     enter.CameraNumber = int.Parse(dataRow[2].ToString());
                     await _context.SaveChangesAsync();
                 }
             }
-            return null;
         }
 
-        public async Task<List<House>> SaveClients(IFormFile file)
+        public async Task SaveClients(IFormFile file)
         {
             var a = file.OpenReadStream();
             var reader = ExcelReaderFactory.CreateReader(a).AsDataSet();
@@ -108,13 +108,16 @@ namespace HackDayApi
                     await _context.Clients.Upsert(client).On(x => new {x.EntranceId , x.ApartmentNumber}).RunAsync();
                 }
             }
-
-            return null;
         }
 
-        public async Task<House> GetHouseInfo(long id)
+        public House GetHouseInfo(long id)
         {
-            var a = await _context.Houses.Where(x => x.Id == id).Include(x=>x.Entrances).ThenInclude(x=>x.Clients).FirstOrDefaultAsync();
+            var a = _context.Houses.Where(x => x.Id == id).Include(x=>x.Entrances).ThenInclude(x=>x.Clients).FirstOrDefault();
+            return a;
+        }
+        public List<House> GetHousesInfo()
+        {
+            var a =  _context.Houses.Include(x=>x.Entrances).ThenInclude(x=>x.Clients).ToList();
             return a;
         }
     }
