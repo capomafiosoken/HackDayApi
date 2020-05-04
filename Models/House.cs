@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HackDayApi.Models
@@ -10,6 +11,6 @@ namespace HackDayApi.Models
         [Column("address")] public string Address { get; set; }
         [Column("latitude")] public double Latitude { get; set; }
         [Column("longitude")] public double Longitude { get; set; }
-
-    }
+        public List<Entrance> Entrances { get; set; }
+        }
 }

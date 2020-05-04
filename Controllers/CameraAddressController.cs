@@ -52,7 +52,7 @@ namespace HackDayApi.Controllers
                             House.Longitude = response.Data.Items[0].Coordinates[1];
                             var Entrance = new Models.Entrance();
                             Entrance.Number = int.Parse(dataRow[1].ToString());
-                            Entrance.cameraNumber = int.Parse(dataRow[2].ToString());
+                            Entrance.CameraNumber = int.Parse(dataRow[2].ToString());
                             Entrance.Latitude = response.Data.Items[0].Entrances[Entrance.Number].Coordinates[0];
                             Entrance.Longitude = response.Data.Items[0].Entrances[Entrance.Number].Coordinates[1];
 
