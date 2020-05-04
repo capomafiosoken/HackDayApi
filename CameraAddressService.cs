@@ -18,7 +18,7 @@ namespace HackDayApi
         {
             _context = context;
         }
-
+        
         public async Task<List<House>> SaveCameras(IFormFile file)
         {
             var a = file.OpenReadStream();
@@ -27,7 +27,7 @@ namespace HackDayApi
             {
                 foreach (DataRow dataRow in dataTable.Rows)
                 {
-                    string address = dataRow[0].ToString();
+                    var address = dataRow[0].ToString();
                     var house = await _context.Houses.FirstOrDefaultAsync(x => x.Address == address);
                     if (house!=null)
                     {
@@ -96,14 +96,16 @@ namespace HackDayApi
                         await _context.SaveChangesAsync();
                     }
                     var enter = await _context.Entrances.FirstOrDefaultAsync(x=>x.HouseId == house.Id && x.Number == int.Parse(dataRow[2].ToString()));
-                    var Client = new Client();
-                    Client.EntranceId = enter.Id;
-                    Client.FullName = dataRow[0].ToString();
-                    Client.ApartmentNumber = int.Parse(dataRow[3].ToString());
-                    Client.PhoneNumber = dataRow[4].ToString();
-                    Client.TariffPlan = dataRow[5].ToString();
+                    var client = new Client
+                    {
+                        EntranceId = enter.Id,
+                        FullName = dataRow[0].ToString(),
+                        ApartmentNumber = int.Parse(dataRow[3].ToString()),
+                        PhoneNumber = dataRow[4].ToString(),
+                        TariffPlan = dataRow[5].ToString()
+                    };
 
-                    await _context.Clients.Upsert(Client).On(x => new {x.EntranceId , x.ApartmentNumber}).RunAsync();
+                    await _context.Clients.Upsert(client).On(x => new {x.EntranceId , x.ApartmentNumber}).RunAsync();
                 }
             }
 
@@ -114,7 +116,6 @@ namespace HackDayApi
         {
             var a = await _context.Houses.Where(x => x.Id == id).Include(x=>x.Entrances).ThenInclude(x=>x.Clients).FirstOrDefaultAsync();
             return a;
-
         }
     }
 }
