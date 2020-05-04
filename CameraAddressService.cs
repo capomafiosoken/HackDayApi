@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ExcelDataReader;
 using HackDayApi.Context;
 using HackDayApi.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace HackDayApi
 {
@@ -26,33 +28,37 @@ namespace HackDayApi
             {
                 foreach (DataRow dataRow in dataTable.Rows)
                 {
-                    var house = new House();
-                    house.Address = dataRow[0].ToString();
-                    var response = await Geocoder.GeocodeAddress(dataRow[0].ToString());
-                    house.Latitude = response.Data.Items[0].Coordinates[0];
-                    house.Longitude = response.Data.Items[0].Coordinates[1];
-                    var EntrancesList = new List<Models.Entrance>();
-                    for (int i = 0 ; i < response.Data.Items[0].Entrances.Length;i++)
+                    string address = dataRow[0].ToString();
+                    var house = await _context.Houses.FirstOrDefaultAsync(x => x.Address == address);
+                    if (house!=null)
                     {
-                        var Entrance  = new Models.Entrance();
-                        if (i==int.Parse(dataRow[1].ToString()))
+                        house = new House
                         {
-                            Entrance.CameraNumber = int.Parse(dataRow[2].ToString());
-                        }
-                        else
+                            Address = address
+                        };
+                        var response = await Geocoder.GeocodeAddress(house.Address);
+                        house.Latitude = response.Data.Items[0].Coordinates[0];
+                        house.Longitude = response.Data.Items[0].Coordinates[1];
+                        var entrancesList = new List<Models.Entrance>();
+                        for (var i = 0; i < response.Data.Items[0].Entrances.Length; i++)
                         {
-                            Entrance.CameraNumber = 0;
+                            entrancesList.Add(new Models.Entrance
+                            {
+                                Number = i + 1,
+                                Latitude = response.Data.Items[0].Entrances[i].Coordinates[0],
+                                Longitude = response.Data.Items[0].Entrances[i].Coordinates[1]
+                            });
                         }
-                       
-                        Entrance.Number = i;
-                        Entrance.Latitude = Entrance.Latitude;
-                        Entrance.Longitude = Entrance.Longitude;
-                        EntrancesList.Add(Entrance);
+                        await _context.Houses.AddAsync(house);
+                        await _context.Entrances.AddRangeAsync(entrancesList);
+                        await _context.SaveChangesAsync();
                     }
 
+                    var enter = await _context.Entrances.FirstOrDefaultAsync(x=>x.Id == house.Id && x.Number == int.Parse(dataRow[1].ToString()));
+                    enter.CameraNumber = int.Parse(dataRow[2].ToString());
+                    await _context.SaveChangesAsync();
                 }
             }
-
             return null;
         }
     }
