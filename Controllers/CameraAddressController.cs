@@ -17,10 +17,12 @@ namespace HackDayApi.Controllers
     {
 
         private readonly ILogger<CameraAddressController> _logger;
+        private readonly CameraAddressService _service;
 
-        public CameraAddressController(ILogger<CameraAddressController> logger)
+        public CameraAddressController(ILogger<CameraAddressController> logger, CameraAddressService service)
         {
             _logger = logger;
+            _service = service;
         }
         
         [HttpGet]
@@ -31,67 +33,16 @@ namespace HackDayApi.Controllers
         }
 
         [HttpPost("/cameras")]
-        public async Task<IActionResult> UploadCameraAddress(List<IFormFile> files)
+        public async Task<IActionResult> UploadCameraAddress(IFormFile file)
         {
-            foreach (var file in files)
-            {
-                if (file.Length > 0)
-                {
-                    // await using var stream = System.IO.File.Create(file.FileName);
-                    // await file.CopyToAsync(stream);
-                    var a =file.OpenReadStream();
-                    var reader = ExcelReaderFactory.CreateReader(a).AsDataSet();
-                    foreach (DataTable dataTable in reader.Tables)
-                    {
-                        foreach (DataRow dataRow in dataTable.Rows)
-                        {
-                            var House = new House();
-                            House.Address = dataRow[0].ToString();
-                            var response = await Geocoder.GeocodeAddress(dataRow[0].ToString());
-                            House.Latitude = response.Data.Items[0].Coordinates[0];
-                            House.Longitude = response.Data.Items[0].Coordinates[1];
-                            var EntrancesList = new List<Models.Entrance>();
-                            for (int i = 0 ; i < response.Data.Items[0].Entrances.Length;i++)
-                            {
-                                var Entrance  = new Models.Entrance();
-                                Entrance.Number = i;
-                                Entrance.Latitude = Entrance.Latitude;
-                                Entrance.Longitude = Entrance.Longitude;
-                                EntrancesList.Add(Entrance);
-                            }
-
-                        }
-                    }
-                }
-            }
-            return Ok(files.Count);
+            var result = await _service.SaveCameras(file);
+            return Ok(result);
         }
         
         [HttpPost("/clients")]
         public async Task<IActionResult> PostFile(List<IFormFile> files)
         {
-            foreach (var file in files)
-            {
-                if (file.Length > 0)
-                {
-                    // await using var stream = System.IO.File.Create(file.FileName);
-                    // await file.CopyToAsync(stream);
-                    var a =file.OpenReadStream();
-                    var reader = ExcelReaderFactory.CreateReader(a).AsDataSet();
-                    foreach (DataTable dataTable in reader.Tables)
-                    {
-                        foreach (DataRow dataRow in dataTable.Rows)
-                        {
-                            var Client = new Client();
-                            Client.FullName = dataRow[0].ToString();
-                            Client.ApartmentNumber = int.Parse(dataRow[3].ToString());
-                            Client.PhoneNumber = dataRow[4].ToString();
-                            Client.TariffPlan = dataRow[5].ToString();
-                            Console.WriteLine(dataRow[0]);
-                        }
-                    }
-                }
-            }
+           
 
             return Ok(files.Count);
         }
