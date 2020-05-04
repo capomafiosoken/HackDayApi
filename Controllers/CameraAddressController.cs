@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,31 +20,32 @@ namespace HackDayApi.Controllers
             _service = service;
         }
         
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetGeocode(long id)
+        [HttpGet]
+        public IActionResult LoadHouses()
         {
-            var a = await _service.GetHouseInfo(id);
+            var a = _service.GetHousesInfo();
+            return Ok(a);
+        }
+        [HttpGet("{id}")]
+        public IActionResult LoadHouse(long id)
+        {
+            var a = _service.GetHouseInfo(id);
             return Ok(a);
         }
 
         [HttpPost("/cameras")]
-        public async Task<IActionResult> UploadCameraAddress(IFormFile file)
+        public async Task<IActionResult> UploadCameras(IFormFile file)
         {
-            var result = await _service.SaveCameras(file);
-            return Ok(result);
+            await _service.SaveCameras(file);
+            return Ok("success");
         }
         
         [HttpPost("/clients")]
-        public async Task<IActionResult> PostFile(List<IFormFile> files)
+        public async Task<IActionResult> UploadClients(IFormFile file)
         {
-            foreach (var file in files)
-            {
-                var result = await _service.SaveCameras(file);
-            
-                return Ok(result);
-            }
+            await _service.SaveClients(file);
+            return Ok("success");
 
-            return null;
         }
     }
 }
