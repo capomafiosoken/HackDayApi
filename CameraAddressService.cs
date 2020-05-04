@@ -53,7 +53,7 @@ namespace HackDayApi
                         await _context.SaveChangesAsync();
                     }
 
-                    var enter = await _context.Entrances.FirstOrDefaultAsync(x=>x.Id == house.Id && x.Number == int.Parse(dataRow[1].ToString()));
+                    var enter = await _context.Entrances.FirstOrDefaultAsync(x=>x.HouseId == house.Id && x.Number == int.Parse(dataRow[1].ToString()));
                     enter.CameraNumber = int.Parse(dataRow[2].ToString());
                     await _context.SaveChangesAsync();
                 }
@@ -95,18 +95,15 @@ namespace HackDayApi
                         await _context.Entrances.AddRangeAsync(entrancesList);
                         await _context.SaveChangesAsync();
                     }
-
-                    var client = await _context.Entrances.FirstOrDefaultAsync(x =>
-                        x.Id == house.Id && x.Number == int.Parse(dataRow[1].ToString()));
-                   
-                    await _context.SaveChangesAsync();
+                    var enter = await _context.Entrances.FirstOrDefaultAsync(x=>x.HouseId == house.Id && x.Number == int.Parse(dataRow[2].ToString()));
                     var Client = new Client();
+                    Client.EntranceId = enter.Id;
                     Client.FullName = dataRow[0].ToString();
-                    //var address = dataRow[1].ToString();
-                    //var entrance_id = int.Parse(dataRow[2].ToString());
                     Client.ApartmentNumber = int.Parse(dataRow[3].ToString());
                     Client.PhoneNumber = dataRow[4].ToString();
                     Client.TariffPlan = dataRow[5].ToString();
+
+                    await _context.Clients.Upsert(Client).On(x => new {x.EntranceId , x.ApartmentNumber}).RunAsync();
                 }
             }
 
