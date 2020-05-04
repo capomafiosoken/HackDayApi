@@ -38,9 +38,14 @@ namespace HackDayApi.Controllers
         [HttpPost("/clients")]
         public async Task<IActionResult> PostFile(List<IFormFile> files)
         {
-           
+            foreach (var file in files)
+            {
+                var result = await _service.SaveCameras(file);
+            
+                return Ok(result);
+            }
 
-            return Ok(files.Count);
+            return null;
         }
     }
 }
