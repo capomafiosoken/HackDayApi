@@ -12,8 +12,6 @@ namespace HackDayApi
 {
     public class Startup
     {
-        readonly string _myAllowSpecificOrigins = "MyAllowSpecificOrigins";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,15 +26,6 @@ namespace HackDayApi
             services.AddDbContext<CameraAddressContext>(builder =>
                 builder.UseNpgsql(Configuration.GetConnectionString("HackDayDatabase")));
             services.AddScoped<CameraAddressService>();
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                    {
-                        builder.WithOrigins("http://localhost:8080")
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-            });
             services.AddControllers();
         }
 
@@ -53,7 +42,7 @@ namespace HackDayApi
 
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             
             app.UseAuthorization();
 
