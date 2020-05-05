@@ -12,6 +12,8 @@ namespace HackDayApi
 {
     public class Startup
     {
+        readonly string _myAllowSpecificOrigins = "MyAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,19 +28,21 @@ namespace HackDayApi
             services.AddDbContext<CameraAddressContext>(builder =>
                 builder.UseNpgsql(Configuration.GetConnectionString("HackDayDatabase")));
             services.AddScoped<CameraAddressService>();
-            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            services.AddCors(options =>
             {
-                builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-            }));
+                options.AddDefaultPolicy(builder =>
+                    {
+                        builder.WithOrigins("http://localhost:8080")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
             services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors("MyPolicy");
 
             if (env.IsDevelopment())
             {
@@ -48,6 +52,8 @@ namespace HackDayApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
             
             app.UseAuthorization();
 
