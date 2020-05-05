@@ -75,7 +75,7 @@ namespace HackDayApi.Services
             {
                 foreach (DataRow dataRow in dataTable.Rows)
                 {
-                    string address = dataRow[1].ToString();
+                    var address = dataRow[1].ToString();
                     var house = await _context.Houses.FirstOrDefaultAsync(x => x.Address == address);
                     if (house == null)
                     {
@@ -122,6 +122,11 @@ namespace HackDayApi.Services
         public House GetHouseInfo(long id)
         {
             var a = _context.Houses.Where(x => x.Id == id).Include(x=>x.Entrances).ThenInclude(x=>x.Clients).FirstOrDefault();
+            if (a != null)
+            {
+                a.TotalCameras = a.Entrances.Sum(x => x.CameraNumber);
+                a.TotalClients = a.Entrances.Sum(x => x.Clients.Count);
+            }
             return a;
         }
         public Models.Entrance GetEntranceInfo(long id)

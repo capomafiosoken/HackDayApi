@@ -21,7 +21,7 @@ namespace HackDayApi.Controllers
             _service = service;
         }
         
-        [HttpGet]
+        [HttpGet("houses")]
         public IActionResult LoadHouses()
         {
             var a = _service.GetHousesInfo();
@@ -51,7 +51,6 @@ namespace HackDayApi.Controllers
         {
             await _service.SaveClients(file);
             return Ok("success");
-
         }
     }
 }
