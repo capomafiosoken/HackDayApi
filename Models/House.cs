@@ -12,5 +12,5 @@ namespace HackDayApi.Models
         [Column("latitude")] public double Latitude { get; set; }
         [Column("longitude")] public double Longitude { get; set; }
         public List<Entrance> Entrances { get; set; }
-        }
+    }
 }

@@ -124,9 +124,14 @@ namespace HackDayApi.Services
             var a = _context.Houses.Where(x => x.Id == id).Include(x=>x.Entrances).ThenInclude(x=>x.Clients).FirstOrDefault();
             return a;
         }
+        public Models.Entrance GetEntranceInfo(long id)
+        {
+            var a = _context.Entrances.Where(x => x.Id == id).Include(x=>x.Clients).FirstOrDefault();
+            return a;
+        }
         public List<House> GetHousesInfo()
         {
-            var a =  _context.Houses.ToList();
+            var a = _context.Houses.Include(x=>x.Entrances).ToList();
             return a;
         }
     }
