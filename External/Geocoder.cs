@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace HackDayApi
+namespace HackDayApi.External
 {
     public static class Geocoder
     {

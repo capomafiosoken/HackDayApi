@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ExcelDataReader;
 using HackDayApi.Context;
+using HackDayApi.External;
 using HackDayApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
