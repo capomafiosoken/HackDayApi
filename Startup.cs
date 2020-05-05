@@ -26,10 +26,12 @@ namespace HackDayApi
             services.AddDbContext<CameraAddressContext>(builder =>
                 builder.UseNpgsql(Configuration.GetConnectionString("HackDayDatabase")));
             services.AddScoped<CameraAddressService>();
-            services.AddCors(c =>  
-            {  
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());  
-            });
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
             services.AddControllers();
         }
 
@@ -45,7 +47,7 @@ namespace HackDayApi
 
             app.UseRouting();
 
-            app.UseCors(options => options.AllowAnyOrigin());
+            app.UseCors("MyPolicy");
             
             app.UseAuthorization();
 
