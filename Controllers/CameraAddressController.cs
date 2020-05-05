@@ -21,32 +21,32 @@ namespace HackDayApi.Controllers
             _service = service;
         }
         
-        [HttpGet("houses")]
+        [HttpGet("/houses")]
         public IActionResult LoadHouses()
         {
             var a = _service.GetHousesInfo();
             return Ok(a);
         }
-        [HttpGet("houses/{id}")]
+        [HttpGet("/houses/{id}")]
         public IActionResult LoadHouse(long id)
         {
             var a = _service.GetHouseInfo(id);
             return Ok(a);
         }
-        [HttpGet("entrances/{id}")]
+        [HttpGet("/entrances/{id}")]
         public IActionResult LoadEntrance(long id)
         {
             var a = _service.GetEntranceInfo(id);
             return Ok(a);
         }
-        [HttpPost("cameras")]
+        [HttpPost("/cameras")]
         public async Task<IActionResult> UploadCameras(IFormFile file)
         {
             await _service.SaveCameras(file);
             return Ok("success");
         }
         
-        [HttpPost("clients")]
+        [HttpPost("/clients")]
         public async Task<IActionResult> UploadClients(IFormFile file)
         {
             await _service.SaveClients(file);

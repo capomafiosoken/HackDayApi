@@ -24,7 +24,13 @@ namespace HackDayApi.Services
         public async Task SaveCameras(IFormFile file)
         {
             var a = file.OpenReadStream();
-            var reader = ExcelReaderFactory.CreateReader(a).AsDataSet();
+            var reader = ExcelReaderFactory.CreateReader(a).AsDataSet(new ExcelDataSetConfiguration
+            {
+                ConfigureDataTable = _ => new ExcelDataTableConfiguration
+                {
+                    UseHeaderRow = true
+                }
+            });
             foreach (DataTable dataTable in reader.Tables)
             {
                 foreach (DataRow dataRow in dataTable.Rows)
@@ -70,7 +76,13 @@ namespace HackDayApi.Services
         public async Task SaveClients(IFormFile file)
         {
             var a = file.OpenReadStream();
-            var reader = ExcelReaderFactory.CreateReader(a).AsDataSet();
+            var reader = ExcelReaderFactory.CreateReader(a).AsDataSet(new ExcelDataSetConfiguration
+            {
+                ConfigureDataTable = _ => new ExcelDataTableConfiguration
+                {
+                    UseHeaderRow = true
+                }
+            });
             foreach (DataTable dataTable in reader.Tables)
             {
                 foreach (DataRow dataRow in dataTable.Rows)
