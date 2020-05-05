@@ -3,7 +3,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace HackDayApi
+namespace HackDayApi.External
 {
     public class YandexResponse
     {
