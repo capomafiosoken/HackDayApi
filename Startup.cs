@@ -28,7 +28,7 @@ namespace HackDayApi
             services.AddScoped<CameraAddressService>();
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(
+                options.AddPolicy("MyCors",
                     builder =>
                     {
                         builder.WithOrigins("http://localhost:8080");
@@ -48,7 +48,7 @@ namespace HackDayApi
             
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors("MyCors");
             
             app.UseAuthorization();
 
