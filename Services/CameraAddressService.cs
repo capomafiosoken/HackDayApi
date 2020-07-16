@@ -131,9 +131,9 @@ namespace HackDayApi.Services
             }
         }
 
-        public House GetHouseInfo(long id)
+        public async Task<House> GetHouseInfo(long id)
         {
-            var a = _context.Houses.Where(x => x.Id == id).Include(x=>x.Entrances).ThenInclude(x=>x.Clients).FirstOrDefault();
+            var a = await _context.Houses.Where(x => x.Id == id).Include(x=>x.Entrances).ThenInclude(x=>x.Clients).FirstOrDefaultAsync();
             if (a != null)
             {
                 a.TotalCameras = a.Entrances.Sum(x => x.CameraNumber);
@@ -141,14 +141,14 @@ namespace HackDayApi.Services
             }
             return a;
         }
-        public Models.Entrance GetEntranceInfo(long id)
+        public async Task<Models.Entrance> GetEntranceInfo(long id)
         {
-            var a = _context.Entrances.Where(x => x.Id == id).Include(x=>x.Clients).FirstOrDefault();
+            var a = await _context.Entrances.Where(x => x.Id == id).Include(x=>x.Clients).FirstOrDefaultAsync();
             return a;
         }
-        public List<House> GetHousesInfo()
+        public async Task<List<House>> GetHousesInfo()
         {
-            var a = _context.Houses.Include(x=>x.Entrances).ToList();
+            var a = await _context.Houses.Include(x=>x.Entrances).ToListAsync();
             return a;
         }
     }

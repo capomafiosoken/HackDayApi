@@ -12,31 +12,29 @@ namespace HackDayApi.Controllers
     public class CameraAddressController : ControllerBase
     {
 
-        private readonly ILogger<CameraAddressController> _logger;
         private readonly CameraAddressService _service;
 
-        public CameraAddressController(ILogger<CameraAddressController> logger, CameraAddressService service)
+        public CameraAddressController(CameraAddressService service)
         {
-            _logger = logger;
             _service = service;
         }
         
         [HttpGet("/houses")]
-        public IActionResult LoadHouses()
+        public async Task<IActionResult> LoadHouses()
         {
-            var a = _service.GetHousesInfo();
+            var a = await _service.GetHousesInfo();
             return Ok(a);
         }
         [HttpGet("/houses/{id}")]
-        public IActionResult LoadHouse(long id)
+        public async Task<IActionResult> LoadHouse(long id)
         {
-            var a = _service.GetHouseInfo(id);
+            var a = await _service.GetHouseInfo(id);
             return Ok(a);
         }
         [HttpGet("/entrances/{id}")]
-        public IActionResult LoadEntrance(long id)
+        public async Task<IActionResult> LoadEntrance(long id)
         {
-            var a = _service.GetEntranceInfo(id);
+            var a = await _service.GetEntranceInfo(id);
             return Ok(a);
         }
         [HttpPost("/cameras")]
